@@ -45,12 +45,17 @@ func split():
 func _process(delta):
 	pass
 
+var touch_down = false
 func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
-	if event is InputEventScreenTouch && !event.pressed:
-		split()
+	if event is InputEventScreenTouch && event.pressed:
+		touch_down = true
+	else:
+		touch_down = false
+		if event is InputEventScreenDrag && touch_down:
+			flip()
+		elif event is InputEventScreenTouch && !event.pressed:
+			split()
 		
-	if event is InputEventScreenDrag:
-		flip()
 		
 	#elif event is InputEventMouseButton && event.pressed:
 	#	if event.button_index == BUTTON_RIGHT:
