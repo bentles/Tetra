@@ -72,3 +72,4 @@ anims/flip = SubResource( 1 )
 anims/flip2 = SubResource( 3 )
 
 [connection signal="input_event" from="TetraBody" to="." method="_on_TetraBody_input_event"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

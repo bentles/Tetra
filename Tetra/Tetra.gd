@@ -1,5 +1,6 @@
 extends Spatial
 
+var flipping = false
 var flipped = false
 var split = false
 var children: Array
@@ -27,6 +28,7 @@ func _ready():
 	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
 
 func flip():
+	flipping = true
 	$AnimationPlayer.play("flip2" if flipped else "flip")
 	flipped = !flipped
 	
@@ -38,8 +40,6 @@ func split():
 	$TetraBody.hide()
 	for child in children:
 		add_child(child)
-	pass
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -49,12 +49,11 @@ var touch_down = false
 func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventScreenTouch && event.pressed:
 		touch_down = true
-	else:
+	elif event is InputEventScreenDrag && touch_down && !flipping:
+		flip()
+	elif event is InputEventScreenTouch && !event.pressed && touch_down:
 		touch_down = false
-		if event is InputEventScreenDrag && touch_down:
-			flip()
-		elif event is InputEventScreenTouch && !event.pressed:
-			split()
+		split()
 		
 		
 	#elif event is InputEventMouseButton && event.pressed:
@@ -62,3 +61,8 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	#		split()
 	#	elif event.button_index == BUTTON_LEFT:
 	#		flip()
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	flipping = false
+	pass # Replace with function body.
