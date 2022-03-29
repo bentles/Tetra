@@ -46,8 +46,11 @@ func _process(delta):
 	pass
 
 func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
-	if event is InputEventMouseButton && event.pressed:
-		if event.button_index == BUTTON_RIGHT:
-			split()
-		elif event.button_index == BUTTON_LEFT:
-			flip()
+	if event is InputEventScreenTouch && !event.pressed:
+		split()
+		
+	#elif event is InputEventMouseButton && event.pressed:
+	#	if event.button_index == BUTTON_RIGHT:
+	#		split()
+	#	elif event.button_index == BUTTON_LEFT:
+	#		flip()
