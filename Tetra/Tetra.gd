@@ -49,6 +49,9 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventScreenTouch && !event.pressed:
 		split()
 		
+	if event is InputEventScreenDrag:
+		flip()
+		
 	#elif event is InputEventMouseButton && event.pressed:
 	#	if event.button_index == BUTTON_RIGHT:
 	#		split()
