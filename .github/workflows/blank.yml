@@ -4,6 +4,7 @@ name: CI
 
 env:
   GODOT_VERSION: 3.3.4
+  EXPORT_NAME: test-project
   
 # Controls when the workflow will run
 on:
