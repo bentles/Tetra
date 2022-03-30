@@ -51,7 +51,7 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
 		flip()
-	elif event is InputEventScreenTouch && !event.pressed && touch_down:
+	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
 		touch_down = false
 		split()
 		
@@ -65,4 +65,5 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	flipping = false
+	touch_down = false
 	pass # Replace with function body.
