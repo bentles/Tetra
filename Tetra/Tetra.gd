@@ -27,9 +27,12 @@ func _ready():
 			children.push_back(tetra)
 	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
 
-func flip():
+func flip(reversed: bool):
 	flipping = true
-	$AnimationPlayer.play("flip2" if flipped else "flip")
+	if (reversed):
+		$AnimationPlayer.play_backwards("flip" if flipped else "flip2")
+	else:
+		$AnimationPlayer.play("flip2" if flipped else "flip")
 	flipped = !flipped
 	
 func split():
@@ -50,7 +53,7 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventScreenTouch && event.pressed:
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
-		flip()
+		flip(event.relative.dot(Vector2.UP) < 0)
 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
 		touch_down = false
 		split()
