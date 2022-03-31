@@ -40,7 +40,7 @@ func flip(relative: Vector2):
 	flipped = !flipped
 	
 func split():
-	if depth >= 3:
+	if depth >= 2:
 		return
 	
 	split = true
