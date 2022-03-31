@@ -30,22 +30,14 @@ func _ready():
 	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
 
 func flip(relative: Vector2):
-	var unsplit = 0
-	if (to_middle != null):
-		unsplit = relative.dot(to_middle)
-	
 	var drag = relative.dot(Vector2.UP)
-	
-	if (unsplit > abs(drag)):
-		unsplit_parent()
+
+	flipping = true
+	if (drag < 0):
+		$AnimationPlayer.play_backwards("flip" if flipped else "flip2")
 	else:
-		flipping = true
-		if (drag < 0):
-			$AnimationPlayer.play_backwards("flip" if flipped else "flip2")
-		else:
-			$AnimationPlayer.play("flip2" if flipped else "flip")
-		flipped = !flipped
-	
+		$AnimationPlayer.play("flip2" if flipped else "flip")
+	flipped = !flipped
 	
 func split():
 	if depth >= 3:
@@ -78,16 +70,8 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
 		touch_down = false
 		split()
-		
-		
-	#elif event is InputEventMouseButton && event.pressed:
-	#	if event.button_index == BUTTON_RIGHT:
-	#		split()
-	#	elif event.button_index == BUTTON_LEFT:
-	#		flip()
-
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	flipping = false
 	touch_down = false
-	pass # Replace with function body.
+	pass # Replace with function body.	
