@@ -40,7 +40,7 @@ func flip(relative: Vector2):
 	flipped = !flipped
 	
 func split():
-	if depth >= 2:
+	if depth >= 3:
 		return
 	
 	split = true
@@ -60,6 +60,10 @@ func unsplit():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+	
+func _unhandled_input(event):
+	if event is InputEventScreenDrag && touch_down && !flipping:
+		flip(event.relative)
 
 var touch_down = false
 func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
