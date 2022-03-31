@@ -14,7 +14,10 @@ var Tetra = load("res://Tetra/Tetra.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+	create_children()
+	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
+
+func create_children():
 	var gap_offset = gap * pow(2, depth)
 	var scale = (5 - (gap_offset * 2)) /10  
 	for i in [-1, 1]:
@@ -27,7 +30,6 @@ func _ready():
 			tetra.scale_object_local(Vector3(scale, scale, scale))
 		
 			children.push_back(tetra)
-	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
 
 func flip(relative: Vector2):
 	var drag = relative.dot(Vector2.UP)
@@ -39,6 +41,10 @@ func flip(relative: Vector2):
 		$AnimationPlayer.play("flip2" if flipped else "flip")
 	flipped = !flipped
 	
+func instant_flip():
+	$AnimationPlayer.play("flip", -1, 20)
+	flipped = true
+	
 func split():
 	if depth >= 3:
 		return
@@ -48,14 +54,21 @@ func split():
 	for child in children:
 		add_child(child)
 		
-func unsplit_parent():
-	var a = get_parent().unsplit()
+func merge_parent():
+	if depth > 0:
+		get_parent().merge(flipped)
 		
-func unsplit():
+func merge(is_flipped: bool):
+	var to_flip = is_flipped != flipped	
 	split = false
 	$TetraBody.show()
 	for child in children:
 		remove_child(child)
+		child.queue_free()
+	children = []
+	create_children()
+	if (to_flip):
+		instant_flip()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -68,12 +81,16 @@ func _unhandled_input(event):
 var touch_down = false
 func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventScreenTouch && event.pressed:
+		$LongPressTimer.start()
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
 		flip(event.relative)
 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
 		touch_down = false
-		split()
+		if $LongPressTimer.time_left == 0:
+			merge_parent()
+		else:
+			split()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	flipping = false
