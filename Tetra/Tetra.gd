@@ -25,7 +25,7 @@ func create_children():
 			var tetra = Tetra.instance()
 			tetra.scale_revert = scale_revert * (1/scale)
 			tetra.depth = depth + 1
-			tetra.to_middle = Vector2(-i * 0.707106, j * 0.707106)
+			tetra.to_middle = Vector2(-i, -j)
 			tetra.translate(Vector3(i * (2.5 + gap_offset),j * (2.5 + gap_offset), 0))
 			tetra.scale_object_local(Vector3(scale, scale, scale))
 		
@@ -83,7 +83,7 @@ func _unhandled_input(event):
 var touch_down = false
 func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 	if event is InputEventScreenTouch && event.pressed:
-		$LongPressTimer.start()
+		_merge_start()
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
 		flip(event.relative)
@@ -93,8 +93,19 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 			merge_parent()
 		else:
 			split()
+			
+func _merge_start():
+	$LongPressTimer.start()
+	if depth > 0:
+		pass
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	flipping = false
 	touch_down = false
-	pass # Replace with function body.	
+	pass # Replace with function body.
+
+func _on_LongPressTimer_timeout():
+	if depth > 0:
+		$Tween.interpolate_property($TetraBody/Border.material, "albedo_color", Color.black, Color.transparent, 2)
+		$Tween.start()
+	pass
