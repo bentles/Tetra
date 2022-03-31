@@ -31,6 +31,12 @@ func create_children():
 		
 			children.push_back(tetra)
 
+func delete_children():
+	for child in children:
+		remove_child(child)
+		child.queue_free()
+	children = []
+
 func flip(relative: Vector2):
 	var drag = relative.dot(Vector2.UP)
 
@@ -59,15 +65,11 @@ func merge_parent():
 		get_parent().merge(flipped)
 		
 func merge(is_flipped: bool):
-	var to_flip = is_flipped != flipped	
 	split = false
 	$TetraBody.show()
-	for child in children:
-		remove_child(child)
-		child.queue_free()
-	children = []
+	delete_children()
 	create_children()
-	if (to_flip):
+	if (is_flipped != flipped):
 		instant_flip()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
