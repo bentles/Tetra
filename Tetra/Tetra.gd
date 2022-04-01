@@ -38,6 +38,7 @@ func delete_children():
 	children = []
 
 func flip(relative: Vector2):
+	_merge_stop()
 	var drag = relative.dot(Vector2.UP)
 
 	flipping = true
@@ -52,6 +53,7 @@ func instant_flip():
 	flipped = true
 	
 func split():
+	_merge_stop()
 	if depth >= 3:
 		return
 	
@@ -61,6 +63,7 @@ func split():
 		add_child(child)
 		
 func merge_parent():
+	_merge_stop()
 	if depth > 0:
 		get_parent().merge(flipped)
 		
@@ -93,9 +96,7 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
 		flip(event.relative)
-		_merge_stop()
 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
-		_merge_stop()
 		touch_down = false
 		if $LongPressTimer.time_left == 0:
 			merge_parent()
