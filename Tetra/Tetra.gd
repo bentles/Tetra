@@ -71,6 +71,12 @@ func merge(is_flipped: bool):
 	create_children()
 	if (is_flipped != flipped):
 		instant_flip()
+		
+func merge_animation_start():
+	$MergeAnimation.play("merge")
+	
+func merge_animation_stop():
+	$MergeAnimation.play("RESET")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -87,7 +93,9 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
 		flip(event.relative)
+		_merge_stop()
 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
+		_merge_stop()
 		touch_down = false
 		if $LongPressTimer.time_left == 0:
 			merge_parent()
@@ -97,15 +105,23 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 func _merge_start():
 	$LongPressTimer.start()
 	if depth > 0:
+		get_parent().merge_animation_start()
 		pass
+		
+func _merge_stop():
+	if depth > 0:
+		get_parent().merge_animation_stop()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	flipping = false
-	touch_down = false
+	if (anim_name == "flip" || anim_name == "flip2"):
+		flipping = false
+		touch_down = false
 	pass # Replace with function body.
 
 func _on_LongPressTimer_timeout():
 	if depth > 0:
-		$Tween.interpolate_property($TetraBody/Border.material, "albedo_color", Color.black, Color.transparent, 2)
-		$Tween.start()
-	pass
+		pass
+
+
+func _on_TetraBody_mouse_exited():
+	_merge_stop()
