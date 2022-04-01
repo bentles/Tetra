@@ -53,7 +53,7 @@ func instant_flip():
 	flipped = true
 	
 func split():
-	_merge_stop()
+	_merge_rewind()
 	if depth >= 3:
 		return
 	
@@ -80,6 +80,10 @@ func merge_animation_start():
 	
 func merge_animation_stop():
 	$MergeAnimation.play("RESET")
+	
+func merge_animation_rewind():
+	$MergeAnimation.stop(false)
+	$MergeAnimation.play_backwards("merge")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -112,6 +116,10 @@ func _merge_start():
 func _merge_stop():
 	if depth > 0:
 		get_parent().merge_animation_stop()
+		
+func _merge_rewind():
+	if depth > 0:
+		get_parent().merge_animation_rewind()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if (anim_name == "flip" || anim_name == "flip2"):
