@@ -7,6 +7,9 @@ var children: Array
 var to_middle: Vector2
 var depth = 0
 
+onready var flip_animation: AnimationPlayer = $FlipAnimation
+onready var merge_animation: AnimationPlayer = $MergeAnimation
+
 const gap = 0.06
 var scale_revert = 1
 
@@ -43,14 +46,18 @@ func flip(relative: Vector2):
 
 	flipping = true
 	if (drag < 0):
-		$AnimationPlayer.play_backwards("flip" if flipped else "flip2")
+		flip_animation.play_backwards("flip" if flipped else "flip2")
 	else:
-		$AnimationPlayer.play("flip2" if flipped else "flip")
+		flip_animation.play("flip2" if flipped else "flip")
 	flipped = !flipped
 	
-func instant_flip():
-	$AnimationPlayer.play("flip", -1, 20)
+func set_flipped():
+	flip_animation.play("flipped")
 	flipped = true
+	
+func set_unflipped():
+	flip_animation.play("unflipped")
+	flipped = false
 	
 func split():
 	_merge_stop()
@@ -61,6 +68,8 @@ func split():
 	$TetraBody.hide()
 	for child in children:
 		add_child(child)
+		if flipped:
+			child.set_flipped()
 		
 func merge_parent():
 	_merge_stop(true)
@@ -72,19 +81,21 @@ func merge(is_flipped: bool):
 	$TetraBody.show()
 	delete_children()
 	create_children()
-	if (is_flipped != flipped):
-		instant_flip()
+	if is_flipped:
+		set_flipped()
+	else:
+		set_unflipped()
 		
-func merge_animation_start():
-	$MergeAnimation.play("merge")
+func merge_animation_start(child_flipped: bool):
+	merge_animation.play("merge_flipped" if child_flipped else "merge")
 	
-func merge_animation_rewind():
-	if $MergeAnimation.is_playing():
-		$MergeAnimation.stop(false)
-		$MergeAnimation.play_backwards("merge")
+func merge_animation_rewind(child_flipped: bool):
+	if merge_animation.is_playing() || merge_animation:
+		merge_animation.stop(false)
+		merge_animation.play_backwards("merge_flipped" if child_flipped else "merge")
 		
 func merge_animation_stop():
-	$MergeAnimation.play("RESET")
+	merge_animation.play("RESET")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -111,7 +122,7 @@ func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
 func _merge_start():
 	$LongPressTimer.start()
 	if depth > 0:
-		get_parent().merge_animation_start()
+		get_parent().merge_animation_start(flipped)
 		pass
 		
 func _merge_stop(fast = false):
@@ -119,7 +130,7 @@ func _merge_stop(fast = false):
 		if fast:
 			get_parent().merge_animation_stop()
 		else:
-			get_parent().merge_animation_rewind()
+			get_parent().merge_animation_rewind(flipped)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if (anim_name == "flip" || anim_name == "flip2"):
@@ -130,7 +141,6 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 func _on_LongPressTimer_timeout():
 	if depth > 0:
 		pass
-
 
 func _on_TetraBody_mouse_exited():
 	_merge_stop()

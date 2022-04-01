@@ -1,14 +1,14 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Tetra/Tetra.gd" type="Script" id=1]
 [ext_resource path="res://Tetra/tetra.glb" type="PackedScene" id=2]
 
 [sub_resource type="BoxShape" id=4]
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=13]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("..:rotation_degrees")
+tracks/0/path = NodePath(".:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -24,7 +24,7 @@ tracks/0/keys = {
 resource_name = "flip"
 length = 0.3
 tracks/0/type = "value"
-tracks/0/path = NodePath("..:rotation_degrees")
+tracks/0/path = NodePath(".:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -40,7 +40,7 @@ tracks/0/keys = {
 resource_name = "flip2"
 length = 0.3
 tracks/0/type = "value"
-tracks/0/path = NodePath("..:rotation_degrees")
+tracks/0/path = NodePath(".:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -50,6 +50,38 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector3( 180, 0, 0 ), Vector3( 0, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "flipped"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( -180, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "unflipped"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ) ]
 }
 
 [sub_resource type="Animation" id=6]
@@ -77,6 +109,18 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../MergeMesh:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 180, 0, 0 ) ]
 }
 
 [sub_resource type="Animation" id=9]
@@ -106,6 +150,58 @@ tracks/1/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("../MergeMesh:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 180, 0, 0 ), Vector3( 180, 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=14]
+resource_name = "merge_flipped"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("../MergeMesh:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0.125 ), Vector3( 0.5, 0.5, 0.125 ), Vector3( 0.55, 0.55, 0.125 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("../MergeMesh:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../MergeMesh:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 0, 0 ) ]
+}
 
 [node name="Tetra" type="Spatial"]
 script = ExtResource( 1 )
@@ -115,22 +211,25 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 0, 0 )
 input_capture_on_drag = true
 
 [node name="Mesh" parent="TetraBody" instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+transform = Transform( 0.5, 0, 0, 0, -0.5, 4.37114e-08, 0, -4.37114e-08, -0.5, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="TetraBody"]
 transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 0.5, 0, 0, 0 )
 shape = SubResource( 4 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="FlipAnimation" type="AnimationPlayer" parent="."]
 root_node = NodePath("../TetraBody")
-anims/RESET = SubResource( 2 )
+anims/RESET = SubResource( 13 )
 anims/flip = SubResource( 1 )
 anims/flip2 = SubResource( 3 )
+anims/flipped = SubResource( 12 )
+anims/unflipped = SubResource( 2 )
 
 [node name="MergeAnimation" type="AnimationPlayer" parent="."]
 root_node = NodePath("../TetraBody")
 anims/RESET = SubResource( 6 )
 anims/merge = SubResource( 9 )
+anims/merge_flipped = SubResource( 14 )
 
 [node name="LongPressTimer" type="Timer" parent="."]
 wait_time = 0.3
@@ -139,11 +238,11 @@ one_shot = true
 [node name="Tween" type="Tween" parent="."]
 
 [node name="MergeMesh" parent="." instance=ExtResource( 2 )]
-transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0.125, 0, 0, 0 )
+transform = Transform( 0, 0, 0, 0, 0, 1.09278e-08, 0, 0, -0.125, 0, 0, 0 )
 visible = false
 
 [connection signal="input_event" from="TetraBody" to="." method="_on_TetraBody_input_event"]
 [connection signal="mouse_exited" from="TetraBody" to="." method="_on_TetraBody_mouse_exited"]
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="FlipAnimation" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="animation_finished" from="MergeAnimation" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="LongPressTimer" to="." method="_on_LongPressTimer_timeout"]
