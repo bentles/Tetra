@@ -7,6 +7,8 @@ var children: Array
 var to_middle: Vector2
 var depth = 0
 
+export var is_interactive: bool = true
+
 onready var flip_animation: AnimationPlayer = $FlipAnimation
 onready var merge_animation: AnimationPlayer = $MergeAnimation
 
@@ -17,22 +19,31 @@ var Tetra = load("res://Tetra/Tetra.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	create_children()
+	_create_children()
 	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
 
-func create_children():
+func _create_children():
 	var gap_offset = gap * pow(2, depth)
-	var scale = (5 - (gap_offset * 2)) /10  
+	var scale = (5 - (gap_offset * 2)) / 10
 	for i in [-1, 1]:
 		for j in [-1, 1]:
 			var tetra = Tetra.instance()
 			tetra.scale_revert = scale_revert * (1/scale)
+			tetra.is_interactive = is_interactive
 			tetra.depth = depth + 1
 			tetra.to_middle = Vector2(-i, -j)
 			tetra.translate(Vector3(i * (2.5 + gap_offset),j * (2.5 + gap_offset), 0))
 			tetra.scale_object_local(Vector3(scale, scale, scale))
-		
 			children.push_back(tetra)
+
+func build_from(tree):
+	if tree is bool:
+		if tree: set_flipped()
+		else: set_unflipped()
+	elif tree is Array:
+		split()
+		for i in 4:
+			children[i].build_from(tree[i])
 
 func delete_children():
 	for child in children:
@@ -54,10 +65,12 @@ func flip(relative: Vector2):
 func set_flipped():
 	flip_animation.play("flipped")
 	flipped = true
+	flipping = false
 	
 func set_unflipped():
 	flip_animation.play("unflipped")
 	flipped = false
+	flipping = false
 	
 func split():
 	_merge_stop()
@@ -80,7 +93,7 @@ func merge(is_flipped: bool):
 	is_split = false
 	$TetraBody.show()
 	delete_children()
-	create_children()
+	_create_children()
 	if is_flipped:
 		set_flipped()
 	else:
@@ -98,7 +111,7 @@ func merge_animation_stop():
 	merge_animation.play("RESET")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 	
 func _unhandled_input(event):
@@ -106,7 +119,10 @@ func _unhandled_input(event):
 		flip(event.relative)
 
 var touch_down = false
-func _on_TetraBody_input_event(camera, event, position, normal, shape_idx):
+func _on_TetraBody_input_event(_camera, event, _position, _normal, _shape_idx):
+	if !is_interactive:
+		return
+	
 	if event is InputEventScreenTouch && event.pressed:
 		_merge_start()
 		touch_down = true
@@ -133,14 +149,23 @@ func _merge_stop(fast = false):
 			get_parent().merge_animation_rewind(flipped)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
+	if !is_interactive:
+		return
+		
 	if (anim_name == "flip" || anim_name == "flip2"):
 		flipping = false
 		touch_down = false
 	pass # Replace with function body.
 
 func _on_LongPressTimer_timeout():
+	if !is_interactive:
+		return
+		
 	if depth > 0:
 		pass
 
 func _on_TetraBody_mouse_exited():
+	if !is_interactive:
+		return
+		
 	_merge_stop()
