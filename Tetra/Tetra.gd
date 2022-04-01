@@ -1,8 +1,8 @@
 extends Spatial
 
-var flipping = false
-var flipped = false
-var is_split = false
+var flipping := false
+var flipped := false
+var is_split := false
 var children: Array
 var to_middle: Vector2
 var depth = 0
@@ -10,7 +10,7 @@ var depth = 0
 onready var flip_animation: AnimationPlayer = $FlipAnimation
 onready var merge_animation: AnimationPlayer = $MergeAnimation
 
-const gap = 0.06
+const gap = 0.05
 var scale_revert = 1
 
 var Tetra = load("res://Tetra/Tetra.tscn")
