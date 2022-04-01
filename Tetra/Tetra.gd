@@ -2,7 +2,7 @@ extends Spatial
 
 var flipping = false
 var flipped = false
-var split = false
+var is_split = false
 var children: Array
 var to_middle: Vector2
 var depth = 0
@@ -53,22 +53,22 @@ func instant_flip():
 	flipped = true
 	
 func split():
-	_merge_rewind()
+	_merge_stop()
 	if depth >= 3:
 		return
 	
-	split = true
+	is_split = true
 	$TetraBody.hide()
 	for child in children:
 		add_child(child)
 		
 func merge_parent():
-	_merge_stop()
+	_merge_stop(true)
 	if depth > 0:
 		get_parent().merge(flipped)
 		
 func merge(is_flipped: bool):
-	split = false
+	is_split = false
 	$TetraBody.show()
 	delete_children()
 	create_children()
@@ -78,12 +78,13 @@ func merge(is_flipped: bool):
 func merge_animation_start():
 	$MergeAnimation.play("merge")
 	
+func merge_animation_rewind():
+	if $MergeAnimation.is_playing():
+		$MergeAnimation.stop(false)
+		$MergeAnimation.play_backwards("merge")
+		
 func merge_animation_stop():
 	$MergeAnimation.play("RESET")
-	
-func merge_animation_rewind():
-	$MergeAnimation.stop(false)
-	$MergeAnimation.play_backwards("merge")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -113,13 +114,12 @@ func _merge_start():
 		get_parent().merge_animation_start()
 		pass
 		
-func _merge_stop():
+func _merge_stop(fast = false):
 	if depth > 0:
-		get_parent().merge_animation_stop()
-		
-func _merge_rewind():
-	if depth > 0:
-		get_parent().merge_animation_rewind()
+		if fast:
+			get_parent().merge_animation_stop()
+		else:
+			get_parent().merge_animation_rewind()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if (anim_name == "flip" || anim_name == "flip2"):
