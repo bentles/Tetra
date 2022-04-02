@@ -1,3 +1,4 @@
+class_name Tetra
 extends Spatial
 
 signal change

@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Spatial",
+"class": "Tetra",
+"language": "GDScript",
+"path": "res://Tetra/Tetra.gd"
+} ]
+_global_script_class_icons={
+"Tetra": ""
+}
+
 [application]
 
 config/name="Tetra"
