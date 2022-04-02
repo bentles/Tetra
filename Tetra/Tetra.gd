@@ -42,7 +42,7 @@ func build_from(tree):
 		if tree: set_flipped()
 		else: set_unflipped()
 	elif tree is Array:
-		split()
+		_split()
 		for i in 4:
 			children[i].build_from(tree[i])
 
@@ -51,7 +51,7 @@ func random_operation(n: int, rng: RandomNumberGenerator):
 		return
 	var operation_choice = rng.randf()
 	if !is_split && operation_choice > 0.5:
-		split()
+		_split()
 		var rest = split_into_four(n - 1, rng)
 		for i in 4:
 			children[i].random_operation(rest[i], rng)
@@ -107,6 +107,9 @@ func set_unflipped():
 	
 func split():
 	_merge_stop()
+	_split()
+			
+func _split():
 	if depth >= 3:
 		return
 	
