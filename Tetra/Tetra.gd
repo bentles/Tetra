@@ -66,7 +66,7 @@ func random_operation(n: int, rng: RandomNumberGenerator):
 func split_into_four(n: int, rng: RandomNumberGenerator) -> Array:
 	if n == 0:
 		return [0,0,0,0]
-	var split = rng.randi() % n
+	var split = rng.randi() % (n + 1)
 	var arr = split_into_two(split, rng)
 	arr.append_array(split_into_two(n - split, rng))
 	return arr
@@ -75,7 +75,7 @@ func split_into_two(n: int, rng: RandomNumberGenerator) -> Array:
 	if n == 0:
 		return [0,0]
 	else:
-		var split = rng.randi() % n
+		var split = rng.randi() % (n + 1)
 		return [split, n - split]
 		
 

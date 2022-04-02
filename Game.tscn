@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Tetra/Tetra.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Game.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=2]
@@ -41,9 +40,6 @@ script = ExtResource( 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 32 )
 fov = 40.0
 
-[node name="Tetra2" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.5, 0 )
-
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 13.6094, 32.1313, 7.24379 )
 
@@ -54,5 +50,4 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30 )
 anims/RESET = SubResource( 2 )
 anims/slide_forwards = SubResource( 1 )
 
-[connection signal="change" from="Tetra2" to="." method="_on_Tetra2_change"]
 [connection signal="animation_finished" from="GoalTetra/GoalAnimation" to="." method="_on_GoalAnimation_animation_finished"]
