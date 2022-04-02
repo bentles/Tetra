@@ -26,12 +26,12 @@ func create_new_goal():
 	goal_tetra.is_interactive = false
 	$GoalTetra.add_child(goal_tetra)
 	while goal_tetra.serialize() == "f":
-		goal_tetra.random_operation(int(floor(difficulty)), rng)
+		goal_tetra.random_operation( int(floor(difficulty)), rng)
 	$GoalTetra/GoalAnimation.play("slide_forwards")
 	
 func create_new_player():
-	player_tetra = Tetra.instance()
-	player_tetra.connect("change", self, "_on_player_tetra_change")
+	player_tetra = Tetra.instance()	
+	player_tetra.connect("change", self, "_on_player_tetra_change", [], CONNECT_DEFERRED)
 	player_tetra.translate(Vector3(0, -5.5, 0))
 	add_child(player_tetra)
 	
