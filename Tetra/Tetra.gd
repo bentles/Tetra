@@ -1,5 +1,7 @@
 extends Spatial
 
+signal change
+
 var flipping := false
 var flipped := false
 var is_split := false
@@ -37,14 +39,15 @@ func _create_children():
 			tetra.scale_object_local(Vector3(scale, scale, scale))
 			children.push_back(tetra)
 
-func build_from(tree):
-	if tree is bool:
-		if tree: set_flipped()
-		else: set_unflipped()
-	elif tree is Array:
-		_split()
-		for i in 4:
-			children[i].build_from(tree[i])
+func serialize() -> String:
+	if !is_split:
+		return "t" if flipped else "f"
+	else:
+		var a = "("
+		for child in children:
+			a += child.serialize()
+		a += ")"
+		return a
 
 func random_operation(n: int, rng: RandomNumberGenerator):
 	if n == 0:
@@ -80,6 +83,12 @@ func delete_children():
 		remove_child(child)
 		child.queue_free()
 	children = []
+	
+func bubble_change():
+	if depth == 0:
+		emit_signal("change")
+	else:
+		get_parent().bubble_change()
 
 func flip(relative: Vector2):
 	_merge_stop()
@@ -91,6 +100,8 @@ func flip(relative: Vector2):
 	else:
 		flip_animation.play("flip2" if flipped else "flip")
 	flipped = !flipped
+	bubble_change()
+	
 
 func set_flip_inverse():
 	set_unflipped() if flipped else set_flipped()
@@ -108,6 +119,7 @@ func set_unflipped():
 func split():
 	_merge_stop()
 	_split()
+	bubble_change()
 			
 func _split():
 	if depth >= 3:
@@ -134,7 +146,8 @@ func merge(is_flipped: bool):
 		set_flipped()
 	else:
 		set_unflipped()
-		
+	bubble_change()
+	
 func merge_animation_start(child_flipped: bool):
 	merge_animation.play("merge_flipped" if child_flipped else "merge")
 	

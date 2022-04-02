@@ -8,6 +8,16 @@ func _ready():
 	
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
-	$Tetra.random_operation(30, rng)
+	$Tetra.random_operation(2, rng)
 	
 	pass
+
+
+func _on_Tetra_change():
+	
+	pass # Replace with function body.
+
+
+func _on_Tetra2_change():
+	print($Tetra2.serialize())
+	pass # Replace with function body.
