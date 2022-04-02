@@ -19,6 +19,7 @@ var Tetra = load("res://Tetra/Tetra.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()
 	_create_children()
 	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
 
@@ -45,6 +46,35 @@ func build_from(tree):
 		for i in 4:
 			children[i].build_from(tree[i])
 
+func random_operation(n: int, rng: RandomNumberGenerator):
+	if n == 0:
+		return
+	var operation_choice = rng.randf()
+	if !is_split && operation_choice > 0.5:
+		split()
+		var rest = split_into_four(n - 1, rng)
+		for i in 4:
+			children[i].random_operation(rest[i], rng)
+	elif !is_split && operation_choice <= 0.5:
+		set_flip_inverse()
+		random_operation(n - 1, rng)
+
+func split_into_four(n: int, rng: RandomNumberGenerator) -> Array:
+	if n == 0:
+		return [0,0,0,0]
+	var split = rng.randi() % n
+	var arr = split_into_two(split, rng)
+	arr.append_array(split_into_two(n - split, rng))
+	return arr
+
+func split_into_two(n: int, rng: RandomNumberGenerator) -> Array:
+	if n == 0:
+		return [0,0]
+	else:
+		var split = rng.randi() % n
+		return [split, n - split]
+		
+
 func delete_children():
 	for child in children:
 		remove_child(child)
@@ -61,6 +91,9 @@ func flip(relative: Vector2):
 	else:
 		flip_animation.play("flip2" if flipped else "flip")
 	flipped = !flipped
+
+func set_flip_inverse():
+	set_unflipped() if flipped else set_flipped()
 	
 func set_flipped():
 	flip_animation.play("flipped")
