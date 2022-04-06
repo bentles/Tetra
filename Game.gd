@@ -33,7 +33,7 @@ func _on_player_tetra_change():
 			add_child(tween)
 			tween.interpolate_property(
 				t, "global_transform", 
-				t.global_transform, t.global_transform.translated(Vector3(0,100,10)), 0.3,
+				t.global_transform, Transform (t.global_transform.basis, t.global_transform.origin + Vector3(0,30,0)), 0.3,
 				Tween.TRANS_QUAD, Tween.EASE_OUT, i * 0.1)
 			if i == goal_tetras.size() - 1:
 				tween.connect("tween_all_completed", self, "next_round")
