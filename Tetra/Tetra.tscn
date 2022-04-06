@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Tetra/Tetra.gd" type="Script" id=1]
 [ext_resource path="res://Tetra/tetra.glb" type="PackedScene" id=2]
@@ -205,6 +205,10 @@ tracks/2/keys = {
 "values": [ Vector3( 0, 0, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
+[sub_resource type="Animation" id=15]
+resource_name = "win"
+length = 0.3
+
 [node name="Tetra" type="Spatial"]
 script = ExtResource( 1 )
 
@@ -237,11 +241,12 @@ anims/merge_flipped = SubResource( 14 )
 wait_time = 0.3
 one_shot = true
 
-[node name="Tween" type="Tween" parent="."]
-
 [node name="MergeMesh" parent="." instance=ExtResource( 2 )]
 transform = Transform( 0, 0, 0, 0, 0, 1.09278e-08, 0, 0, -0.125, 0, 0, 0 )
 visible = false
+
+[node name="SuccessAnimation" type="AnimationPlayer" parent="."]
+anims/win = SubResource( 15 )
 
 [connection signal="input_event" from="TetraBody" to="." method="_on_TetraBody_input_event"]
 [connection signal="mouse_exited" from="TetraBody" to="." method="_on_TetraBody_mouse_exited"]

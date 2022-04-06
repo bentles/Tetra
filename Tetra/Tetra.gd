@@ -49,6 +49,15 @@ func serialize() -> String:
 			a += child.serialize()
 		a += ")"
 		return a
+		
+func flatten() -> Array:
+	if !is_split:
+		return [self]
+	else:
+		var all = []
+		for child in children:
+			all += child.flatten()
+		return all
 
 func random_operation(n: int, rng: RandomNumberGenerator):
 	if n == 0:
@@ -151,6 +160,7 @@ func merge(is_flipped: bool):
 	else:
 		set_unflipped()
 	bubble_change()
+	$SuccessAnimation.play("win")
 	
 func merge_animation_start(child_flipped: bool):
 	merge_animation.play("merge_flipped" if child_flipped else "merge")
@@ -218,7 +228,7 @@ func _on_LongPressTimer_timeout():
 		
 	if depth > 0:
 		pass
-
+		
 func _on_TetraBody_mouse_exited():
 	if !is_interactive:
 		return
