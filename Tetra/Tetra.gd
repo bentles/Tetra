@@ -92,6 +92,9 @@ func bubble_change():
 		get_parent().bubble_change()
 
 func flip(relative: Vector2):
+	if abs(relative.y) < 4:
+		return
+
 	_merge_stop()
 	var drag = relative.dot(Vector2.UP)
 
@@ -174,9 +177,11 @@ func _on_TetraBody_input_event(_camera, event, _position, _normal, _shape_idx):
 		return
 	
 	if event is InputEventScreenTouch && event.pressed:
+		
 		_merge_start()
 		touch_down = true
 	elif event is InputEventScreenDrag && touch_down && !flipping:
+		
 		flip(event.relative)
 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
 		touch_down = false
@@ -218,4 +223,4 @@ func _on_TetraBody_mouse_exited():
 	if !is_interactive:
 		return
 		
-	_merge_stop()
+	_merge_stop(true)
