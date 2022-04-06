@@ -62,4 +62,7 @@ anims/slide_forwards = SubResource( 1 )
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 3 )
 
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 30, 30 )
+
 [connection signal="animation_finished" from="GoalTetra/GoalAnimation" to="." method="_on_GoalAnimation_animation_finished"]
