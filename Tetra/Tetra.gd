@@ -117,7 +117,10 @@ func flip(relative: Vector2):
 	
 
 func set_flip_inverse():
-	set_unflipped() if flipped else set_flipped()
+	if flipped:
+		set_unflipped() 
+	else:
+		set_flipped()
 	
 func set_flipped():
 	flip_animation.play("flipped")
