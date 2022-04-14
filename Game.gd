@@ -7,11 +7,13 @@ var player_tetra
 onready var rng = RandomNumberGenerator.new()
 var animations = []
 
+
 func _ready():
 	rng.randomize()
 	create_new_goal()
 	create_new_player()
 	pass
+
 	
 func next_round():
 	#clean up tweens - probably a better way to do this

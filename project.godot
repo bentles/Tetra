@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "GameInputEvent",
+"language": "GDScript",
+"path": "res://Input/GameInputEvent.gd"
+}, {
 "base": "Spatial",
 "class": "Tetra",
 "language": "GDScript",
 "path": "res://Tetra/Tetra.gd"
 } ]
 _global_script_class_icons={
+"GameInputEvent": "",
 "Tetra": ""
 }
 
@@ -23,6 +29,10 @@ _global_script_class_icons={
 config/name="Tetra"
 run/main_scene="res://Game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+InputManager="*res://InputManager.gd"
 
 [display]
 

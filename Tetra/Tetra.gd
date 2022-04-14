@@ -179,29 +179,26 @@ func merge_animation_stop():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
-	
-func _unhandled_input(event):
-	if event is InputEventScreenDrag && touch_down && !flipping:
-		flip(event.relative)
+
 
 var touch_down = false
-func _on_TetraBody_input_event(_camera, event, _position, _normal, _shape_idx):
-	if !is_interactive:
-		return
+# func _on_TetraBody_input_event(_camera, event, _position, _normal, _shape_idx):
+# 	if !is_interactive:
+# 		return
 	
-	if event is InputEventScreenTouch && event.pressed:
+# 	if event is InputEventScreenTouch && event.pressed:
 		
-		_merge_start()
-		touch_down = true
-	elif event is InputEventScreenDrag && touch_down && !flipping:
+# 		_merge_start()
+# 		touch_down = true
+# 	elif event is InputEventScreenDrag && touch_down && !flipping:
 		
-		flip(event.relative)
-	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
-		touch_down = false
-		if $LongPressTimer.time_left == 0:
-			merge_parent()
-		else:
-			split()
+# 		flip(event.relative)
+# 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
+# 		touch_down = false
+# 		if $LongPressTimer.time_left == 0:
+# 			merge_parent()
+# 		else:
+# 			split()
 			
 func _merge_start():
 	$LongPressTimer.start()
@@ -232,8 +229,8 @@ func _on_LongPressTimer_timeout():
 	if depth > 0:
 		pass
 		
-func _on_TetraBody_mouse_exited():
-	if !is_interactive:
-		return
+# func _on_TetraBody_mouse_exited():
+# 	if !is_interactive:
+# 		return
 		
-	_merge_stop(true)
+# 	_merge_stop(true)
