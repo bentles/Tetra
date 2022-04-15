@@ -50,7 +50,10 @@ func _unhandled_input(event):
 			pressed_pos = event.position
 		else:
 			if game_event == GameInputEvent.NONE:
-				set_event(GameInputEvent.TAP)
+				if pressed_pos.distance_to(event.position) < 5:
+					set_event(GameInputEvent.TAP)
+				else: #very very fast swipe
+					set_event(GameInputEvent.FAST_SWIPE)
 			reset()
 	
 	if game_event != GameInputEvent.NONE:
