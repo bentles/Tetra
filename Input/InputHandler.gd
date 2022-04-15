@@ -3,7 +3,7 @@ extends Spatial
 
 const HOLD_TIME = 0.3
 const SWIPE_SPEED = 100
-const FAST_SWIPE_SPEED = 350
+const FAST_SWIPE_SPEED = 500
 
 const GameInputEvent = preload("res://Input/GameInputEvent.gd")
 var game_event = GameInputEvent.NONE
