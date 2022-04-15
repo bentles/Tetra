@@ -3,7 +3,7 @@ extends Spatial
 
 const HOLD_TIME = 0.3
 const SWIPE_SPEED = 100
-const FAST_SWIPE_SPEED = 4000
+const FAST_SWIPE_SPEED = 3500
 
 const GameInputEvent = preload("res://Input/GameInputEvent.gd")
 var game_event = GameInputEvent.NONE
@@ -52,7 +52,7 @@ func _unhandled_input(event):
 			if game_event == GameInputEvent.NONE:
 				if pressed_pos.distance_to(event.position) < 5:
 					set_event(GameInputEvent.TAP)
-				else: #very very fast swipe
+				else:
 					var swipe_speed = pressed_pos.distance_to(event.position)/ time_pressed
 					print(swipe_speed)
 					if swipe_speed > FAST_SWIPE_SPEED:
@@ -60,19 +60,6 @@ func _unhandled_input(event):
 					elif swipe_speed > SWIPE_SPEED:
 						set_event(GameInputEvent.SWIPE)
 			reset()
-	
-	if game_event != GameInputEvent.NONE:
-		return
-		
-	# possibly need to be able to promote a swipe into a fast swipe
-	# if this doesn't feel right on mobile
-	
-	#if event is InputEventScreenDrag:
-	#	current_pos = event.position
-	#	if event.speed.length() > FAST_SWIPE_SPEED:
-	#		set_event(GameInputEvent.FAST_SWIPE)
-	#	elif event.speed.length() > SWIPE_SPEED:
-	#		set_event(GameInputEvent.SWIPE)
 			
 func set_event(ev):
 	game_event = ev
