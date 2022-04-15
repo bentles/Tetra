@@ -100,13 +100,25 @@ func bubble_change():
 		get_parent().bubble_change()
 
 func flip(relative: Vector2):
-	var drag = relative.dot(Vector2.UP)
-
+	var dragY = relative.dot(Vector2.UP)
+	var dragX = relative.dot(Vector2.LEFT)
+	
+	var vertical = abs(dragY) > abs(dragX)
+	var drag = dragY if vertical else dragX
+	var backwards = drag < 0
+	
 	flipping = true
-	if (drag < 0):
-		flip_animation.play_backwards("flip" if flipped else "flip2")
+	
+	if vertical:
+		if (backwards):
+			flip_animation.play_backwards("flip" if flipped else "flip2")
+		else:
+			flip_animation.play("flip2" if flipped else "flip")
 	else:
-		flip_animation.play("flip2" if flipped else "flip")
+		if (backwards):
+			flip_animation.play_backwards("fliph" if flipped else "fliph2")
+		else:
+			flip_animation.play("fliph2" if flipped else "fliph")
 	flipped = !flipped
 	bubble_change()
 	
