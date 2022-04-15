@@ -221,6 +221,24 @@ func handle_event(event: GameInputEvent):
 		flip(event.end_pos - event.pressed_pos)
 	if (event.event_type == GameInputEvent.FAST_SWIPE):
 		domino_flip(event.end_pos - event.pressed_pos)
+	if (event.event_type == GameInputEvent.HOLD):
+		merge_parent()
+		
+func merge_parent():
+	if depth > 0:
+		get_parent().merge(flipped)
+		
+func merge(is_flipped: bool):
+	is_split = false
+	$TetraBody.show()
+	$TetraBody/CollisionShape.disabled = false
+	delete_children()
+	_create_children()
+	if is_flipped:
+		set_flipped()
+	else:
+		set_unflipped()
+	bubble_change()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if !is_interactive:
