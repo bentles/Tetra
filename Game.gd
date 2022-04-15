@@ -7,6 +7,9 @@ var player_tetra
 onready var rng = RandomNumberGenerator.new()
 var animations = []
 
+var game_event: GameInputEvent
+
+
 func _ready():
 	rng.randomize()
 	create_new_goal()
@@ -40,7 +43,19 @@ func _on_player_tetra_change():
 			tween.start()
 		#
 
-
+func _physics_process(delta):
+	process_input_events()
+		
+func process_input_events():
+	if game_event != null:
+		var camera = $Camera
+		var from = camera.project_ray_origin(game_event.pressed_pos)
+		var to = from + camera.project_ray_normal(game_event.pressed_pos) * 1000
+		var space_state = get_world().direct_space_state
+		var result = space_state.intersect_ray(from, to, [self])
+		if result.has("collider"):
+			result.collider.get_parent().handle_event(game_event)
+		game_event = null
 
 func create_new_goal():
 	goal_tetra = Tetra.instance()
@@ -59,7 +74,7 @@ func create_new_player():
 	add_child(player_tetra)
 	
 func create_next_round():
-	difficulty += 0.08
+	difficulty += 0.13
 	goal_tetra.queue_free()
 	player_tetra.queue_free()
 	$GoalTetra/GoalAnimation.play("RESET")
@@ -70,3 +85,9 @@ func _on_GoalAnimation_animation_finished(anim_name):
 	if anim_name == "slide_forwards":
 		pass # game over
 	 # Replace with function body.
+
+
+func _on_InputHandler_game_input_occured(event: GameInputEvent):
+	game_event = event
+	
+	pass

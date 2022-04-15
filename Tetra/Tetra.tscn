@@ -248,8 +248,6 @@ visible = false
 [node name="SuccessAnimation" type="AnimationPlayer" parent="."]
 anims/win = SubResource( 15 )
 
-[connection signal="input_event" from="TetraBody" to="." method="_on_TetraBody_input_event"]
-[connection signal="mouse_exited" from="TetraBody" to="." method="_on_TetraBody_mouse_exited"]
 [connection signal="animation_finished" from="FlipAnimation" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="animation_finished" from="MergeAnimation" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="LongPressTimer" to="." method="_on_LongPressTimer_timeout"]

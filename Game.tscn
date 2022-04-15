@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
+[ext_resource path="res://Input/InputHandler.gd" type="Script" id=1]
 [ext_resource path="res://Game.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=2]
@@ -71,4 +72,8 @@ transform = Transform( 1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 30, 30 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/win = SubResource( 5 )
 
+[node name="InputHandler" type="Spatial" parent="."]
+script = ExtResource( 1 )
+
 [connection signal="animation_finished" from="GoalTetra/GoalAnimation" to="." method="_on_GoalAnimation_animation_finished"]
+[connection signal="game_input_occured" from="InputHandler" to="." method="_on_InputHandler_game_input_occured"]
