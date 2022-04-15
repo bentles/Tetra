@@ -48,6 +48,7 @@ func _physics_process(delta):
 		
 func process_input_events():
 	if game_event != null:
+
 		var camera = $Camera
 		var from = camera.project_ray_origin(game_event.pressed_pos)
 		var to = from + camera.project_ray_normal(game_event.pressed_pos) * 1000
@@ -55,6 +56,10 @@ func process_input_events():
 		var result = space_state.intersect_ray(from, to, [self])
 		if result.has("collider"):
 			result.collider.get_parent().handle_event(game_event)
+			var text = $Debug.text
+			text = "EVENT: " + str(game_event.event_type) + " to " \
+			 + str(result.collider) + "\n" + text
+			$Debug.text = text
 		game_event = null
 
 func create_new_goal():
