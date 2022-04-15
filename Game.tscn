@@ -76,3 +76,4 @@ anims/win = SubResource( 5 )
 script = ExtResource( 1 )
 
 [connection signal="animation_finished" from="GoalTetra/GoalAnimation" to="." method="_on_GoalAnimation_animation_finished"]
+[connection signal="game_input_occured" from="InputHandler" to="." method="_on_InputHandler_game_input_occured"]

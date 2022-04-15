@@ -6,7 +6,7 @@ signal change
 var flipping := false
 var flipped := false
 var is_split := false
-var children: Array
+var children := []
 var to_middle: Vector2
 var depth = 0
 
@@ -86,7 +86,6 @@ func split_into_two(n: int, rng: RandomNumberGenerator) -> Array:
 	else:
 		var split = rng.randi() % (n + 1)
 		return [split, n - split]
-		
 
 func delete_children():
 	for child in children:
@@ -101,10 +100,6 @@ func bubble_change():
 		get_parent().bubble_change()
 
 func flip(relative: Vector2):
-	if abs(relative.y) < 4:
-		return
-
-	_merge_stop()
 	var drag = relative.dot(Vector2.UP)
 
 	flipping = true
@@ -133,85 +128,33 @@ func set_unflipped():
 	flipping = false
 	
 func split():
-	_merge_stop()
 	_split()
 	bubble_change()
-			
+
 func _split():
 	if depth >= 3:
 		return
-	
+		
 	is_split = true
 	$TetraBody.hide()
+	$TetraBody/CollisionShape.disabled = true
 	for child in children:
 		add_child(child)
 		if flipped:
 			child.set_flipped()
 		
-func merge_parent():
-	_merge_stop(true)
-	if depth > 0:
-		get_parent().merge(flipped)
-		
-func merge(is_flipped: bool):
-	is_split = false
-	$TetraBody.show()
-	delete_children()
-	_create_children()
-	if is_flipped:
-		set_flipped()
-	else:
-		set_unflipped()
-	bubble_change()
-	$SuccessAnimation.play("win")
-	
-func merge_animation_start(child_flipped: bool):
-	merge_animation.play("merge_flipped" if child_flipped else "merge")
-	
-func merge_animation_rewind(child_flipped: bool):
-	if merge_animation.is_playing() || merge_animation:
-		merge_animation.stop(false)
-		merge_animation.play_backwards("merge_flipped" if child_flipped else "merge")
-		
-func merge_animation_stop():
-	merge_animation.play("RESET")
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
-
-
-var touch_down = false
-# func _on_TetraBody_input_event(_camera, event, _position, _normal, _shape_idx):
-# 	if !is_interactive:
-# 		return
 	
-# 	if event is InputEventScreenTouch && event.pressed:
-		
-# 		_merge_start()
-# 		touch_down = true
-# 	elif event is InputEventScreenDrag && touch_down && !flipping:
-		
-# 		flip(event.relative)
-# 	elif event is InputEventScreenTouch && !event.pressed && touch_down && !flipping:
-# 		touch_down = false
-# 		if $LongPressTimer.time_left == 0:
-# 			merge_parent()
-# 		else:
-# 			split()
-			
-func _merge_start():
-	$LongPressTimer.start()
-	if depth > 0:
-		get_parent().merge_animation_start(flipped)
-		pass
-		
-func _merge_stop(fast = false):
-	if depth > 0:
-		if fast:
-			get_parent().merge_animation_stop()
-		else:
-			get_parent().merge_animation_rewind(flipped)
+func handle_event(event: GameInputEvent):
+	print("EVENT: " + str(event.event_type) + " to " + str(self))
+	if (event.event_type == GameInputEvent.TAP):
+		split()
+	if (event.event_type == GameInputEvent.SWIPE):
+		flip(event.end_pos - event.pressed_pos)
+	if (event.event_type == GameInputEvent.FAST_SWIPE):
+		flip(event.end_pos - event.pressed_pos)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if !is_interactive:
@@ -219,7 +162,6 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		
 	if (anim_name == "flip" || anim_name == "flip2"):
 		flipping = false
-		touch_down = false
 	pass # Replace with function body.
 
 func _on_LongPressTimer_timeout():
@@ -228,9 +170,3 @@ func _on_LongPressTimer_timeout():
 		
 	if depth > 0:
 		pass
-		
-# func _on_TetraBody_mouse_exited():
-# 	if !is_interactive:
-# 		return
-		
-# 	_merge_stop(true)
