@@ -37,6 +37,7 @@ window/size/height=1920
 window/size/resizable=false
 window/size/test_width=480
 window/size/test_height=800
+window/handheld/orientation="portrait"
 
 [input_devices]
 
