@@ -5,6 +5,8 @@ signal change
 
 var flipping := false
 var flipped := false
+var flip_direction: Vector2
+
 var is_split := false
 var children := []
 var depth = 0
@@ -16,7 +18,7 @@ var y_bounds = [0, UPPER_BOUND]
 export var is_interactive: bool = true
 
 onready var flip_animation: AnimationPlayer = $FlipAnimation
-onready var merge_animation: AnimationPlayer = $MergeAnimation
+onready var fast_flip_animation: AnimationPlayer = $FastFlipAnimation
 
 const gap = 0.05
 var scale_revert = 1
@@ -61,8 +63,6 @@ func flatten() -> Array:
 		for child in children:
 			all += child.flatten()
 		return all
-		
-
 
 func random_operation(n: int, rng: RandomNumberGenerator):
 	if n == 0:
@@ -144,16 +144,11 @@ func _check_ranges(is_align, with_align, is_adjacent, with_adjacent, forwards: b
 	return aligned && adjacent
 
 func domino_flip(direction: Vector2):
-		flip(direction)
+		flip(direction, true)
 		
-		var tetra = self
-		while tetra.depth > 0:
-			tetra = tetra.get_parent()
-			
-		tetra.should_domino(x_bounds, y_bounds, direction)
-		pass
 
-func flip(direction: Vector2):
+
+func flip(direction: Vector2, domino = false):
 	var dragY = direction.dot(Vector2.UP)
 	var dragX = direction.dot(Vector2.LEFT)
 	
@@ -163,19 +158,22 @@ func flip(direction: Vector2):
 	
 	flipping = true
 	
+	var animation = fast_flip_animation if domino else flip_animation
+	
 	if vertical:
 		if (backwards):
-			flip_animation.play_backwards("flip" if flipped else "flip2")
+			animation.play_backwards("flip" if flipped else "flip2")
 		else:
-			flip_animation.play("flip2" if flipped else "flip")
+			animation.play("flip2" if flipped else "flip")
 	else:
 		if (backwards):
-			flip_animation.play_backwards("fliph" if flipped else "fliph2")
+			animation.play_backwards("fliph" if flipped else "fliph2")
 		else:
-			flip_animation.play("fliph2" if flipped else "fliph")
+			animation.play("fliph2" if flipped else "fliph")
+			
 	flipped = !flipped
+	flip_direction = direction
 	bubble_change()
-	
 
 func set_flip_inverse():
 	if flipped:
@@ -239,18 +237,20 @@ func merge(is_flipped: bool):
 	else:
 		set_unflipped()
 	bubble_change()
-
-func _on_AnimationPlayer_animation_finished(anim_name):
+	
+func _flip_finished(anim_name):
 	if !is_interactive:
 		return
-		
 	if "flip" in anim_name:
 		flipping = false
-	pass # Replace with function body.
 
-func _on_LongPressTimer_timeout():
-	if !is_interactive:
-		return
+func _on_FlipAnimation_animation_finished(anim_name):
+	_flip_finished(anim_name)
+
+func _on_FastFlipAnimation_animation_finished(anim_name):
+	_flip_finished(anim_name)
 		
-	if depth > 0:
-		pass
+	var tetra = self
+	while tetra.depth > 0:
+		tetra = tetra.get_parent()
+	tetra.should_domino(x_bounds, y_bounds, flip_direction)
