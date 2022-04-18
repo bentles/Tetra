@@ -1,11 +1,12 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Tetra/Tetra.gd" type="Script" id=1]
-[ext_resource path="res://Tetra/tetra.glb" type="PackedScene" id=2]
+[ext_resource path="res://Tetra/old_model/tetra.glb" type="PackedScene" id=2]
 [ext_resource path="res://Tetra/flip2.wav" type="AudioStream" id=3]
 [ext_resource path="res://Tetra/click.mp3" type="AudioStream" id=4]
 [ext_resource path="res://Tetra/merge.wav" type="AudioStream" id=5]
 [ext_resource path="res://Tetra/split.wav" type="AudioStream" id=6]
+[ext_resource path="res://Tetra/model/tetra4.glb" type="PackedScene" id=7]
 
 [sub_resource type="BoxShape" id=4]
 
@@ -215,8 +216,12 @@ script = ExtResource( 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.5, 0, 0, 0 )
 input_capture_on_drag = true
 
+[node name="tetra4" parent="TetraBody" instance=ExtResource( 7 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+
 [node name="Mesh" parent="TetraBody" instance=ExtResource( 2 )]
 transform = Transform( 0.5, 0, 0, 0, -0.5, -4.37114e-08, 0, 4.37114e-08, -0.5, 0, 0, 0 )
+visible = false
 
 [node name="CollisionShape" type="CollisionShape" parent="TetraBody"]
 transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 0.5, 0, 0, 0 )

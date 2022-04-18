@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/tetra.glb-7799a1911728bd95d05ec006f4032938.scn"
+path="res://.import/tetra4.glb-fcc7ba9fcded2cec9ff4098731178681.scn"
 
 [deps]
 
-source_file="res://Tetra/tetra.glb"
-dest_files=[ "res://.import/tetra.glb-7799a1911728bd95d05ec006f4032938.scn" ]
+source_file="res://Tetra/model/tetra4.glb"
+dest_files=[ "res://.import/tetra4.glb-fcc7ba9fcded2cec9ff4098731178681.scn" ]
 
 [params]
 
