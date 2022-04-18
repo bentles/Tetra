@@ -9,6 +9,7 @@ var flip_direction: Vector2
 
 var is_split := false
 var children := []
+var root
 var depth = 0
 
 const UPPER_BOUND = 8
@@ -31,6 +32,10 @@ var Tetra = load("res://Tetra/Tetra.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	root = self
+	while root.depth > 0:
+		root = root.get_parent()
+	
 	randomize()
 	_create_children()
 	$TetraBody.scale_object_local(Vector3(1, 1, scale_revert))
@@ -187,11 +192,13 @@ func set_flip_inverse():
 		set_flipped()
 	
 func set_flipped():
+	# TODO: i think this line causes intermittent bugs
 	flip_animation.play("flipped")
 	flipped = true
 	flipping = false
 	
 func set_unflipped():
+	# TODO: i think this line causes intermittent bugs
 	flip_animation.play("unflipped")
 	flipped = false
 	flipping = false
@@ -256,8 +263,4 @@ func _on_FlipAnimation_animation_finished(anim_name):
 
 func _on_FastFlipAnimation_animation_finished(anim_name):
 	_flip_finished(anim_name)
-		
-	var tetra = self
-	while tetra.depth > 0:
-		tetra = tetra.get_parent()
-	tetra.should_domino(x_bounds, y_bounds, flip_direction)
+	root.should_domino(x_bounds, y_bounds, flip_direction)
