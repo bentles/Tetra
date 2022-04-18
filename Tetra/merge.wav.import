@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/merge.wav-3c4865cf3d99fc859704a6d0e2812abd.sample"
+
+[deps]
+
+source_file="res://Tetra/merge.wav"
+dest_files=[ "res://.import/merge.wav-3c4865cf3d99fc859704a6d0e2812abd.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

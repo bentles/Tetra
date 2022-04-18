@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/click.mp3-0338905052d396ff58c2e60f05f83daf.mp3str"
+
+[deps]
+
+source_file="res://Tetra/click.mp3"
+dest_files=[ "res://.import/click.mp3-0338905052d396ff58c2e60f05f83daf.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

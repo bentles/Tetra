@@ -19,6 +19,10 @@ export var is_interactive: bool = true
 
 onready var flip_animation: AnimationPlayer = $FlipAnimation
 onready var fast_flip_animation: AnimationPlayer = $FastFlipAnimation
+onready var flip_sound = $FlipSound
+onready var fast_flip_sound = $FastFlipSound
+onready var split_sound = $SplitSound
+onready var merge_sound = $MergeSound
 
 const gap = 0.05
 var scale_revert = 1
@@ -129,6 +133,7 @@ func should_domino(x_bds, y_bds, direction: Vector2):
 		else:
 			in_range = _check_ranges(x_bds, x_bounds, y_bds, y_bounds, direction.y < 0)
 		if in_range:
+			fast_flip_sound.play()
 			domino_flip(direction)
 	pass
 	
@@ -145,8 +150,6 @@ func _check_ranges(is_align, with_align, is_adjacent, with_adjacent, forwards: b
 
 func domino_flip(direction: Vector2):
 		flip(direction, true)
-		
-
 
 func flip(direction: Vector2, domino = false):
 	var dragY = direction.dot(Vector2.UP)
@@ -159,8 +162,10 @@ func flip(direction: Vector2, domino = false):
 	flipping = true
 	
 	var animation = fast_flip_animation if domino else flip_animation
+	flip_sound.play()
 	
 	if vertical:
+		
 		if (backwards):
 			animation.play_backwards("flip" if flipped else "flip2")
 		else:
@@ -193,6 +198,7 @@ func set_unflipped():
 	
 func split():
 	_split()
+	split_sound.play()
 	bubble_change()
 
 func _split():
@@ -236,6 +242,7 @@ func merge(is_flipped: bool):
 		set_flipped()
 	else:
 		set_unflipped()
+	merge_sound.play()
 	bubble_change()
 	
 func _flip_finished(anim_name):
