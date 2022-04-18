@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://TetraTheme.tres" type="Theme" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://Menu/kongtext.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Menu/MainMenu.gd" type="Script" id=4]
+[ext_resource path="res://WorldEnvironment.tscn" type="PackedScene" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
+
+[node name="Background" type="Spatial"]
+
+[node name="MainMenu" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMenu/VBoxContainer"]
+margin_top = 925.0
+margin_right = 1080.0
+margin_bottom = 995.0
+
+[node name="PlayGame" type="Button" parent="MainMenu/VBoxContainer/MarginContainer"]
+margin_right = 1080.0
+margin_bottom = 70.0
+custom_fonts/font = SubResource( 1 )
+text = "Play Game"
+icon = ExtResource( 2 )
+
+[node name="Camera" type="Camera" parent="."]
+fov = 40.0
+
+[node name="WorldEnvironment" parent="." instance=ExtResource( 5 )]
+
+[connection signal="pressed" from="MainMenu/VBoxContainer/MarginContainer/PlayGame" to="MainMenu" method="_on_PlayGame_pressed"]
