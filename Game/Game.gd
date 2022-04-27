@@ -6,14 +6,15 @@ var goal_tetra
 var player_tetra
 onready var rng = RandomNumberGenerator.new()
 var animations = []
+var won = false
 
 var game_event: GameInputEvent
-
 
 func _ready():
 	rng.randomize()
 	create_new_goal()
 	create_new_player()
+	$GameOver.visible = false
 	pass
 	
 func next_round():
@@ -28,6 +29,7 @@ func _on_player_tetra_change():
 	var goal_string = goal_tetra.serialize()
 	
 	if (player_string == goal_string):
+		won = true
 		var goal_tetras = goal_tetra.flatten()
 		for i in goal_tetras.size():
 			var t = goal_tetras[goal_tetras.size() - i - 1] as Spatial
@@ -63,6 +65,8 @@ func process_input_events():
 		game_event = null
 
 func create_new_goal():
+	if goal_tetra != null:
+		goal_tetra.queue_free()
 	goal_tetra = Tetra.instance()
 	
 	goal_tetra.translate(Vector3(0, 5.5, 0))
@@ -73,12 +77,15 @@ func create_new_goal():
 	$GoalTetra/GoalAnimation.play("slide_forwards")
 	
 func create_new_player():
+	if player_tetra != null:
+		player_tetra.queue_free()
 	player_tetra = Tetra.instance()
 	player_tetra.connect("change", self, "_on_player_tetra_change", [], CONNECT_DEFERRED)
 	player_tetra.translate(Vector3(0, -5.5, 0))
 	add_child(player_tetra)
 	
 func create_next_round():
+	won = false
 	difficulty += 0.13
 	goal_tetra.queue_free()
 	player_tetra.queue_free()
@@ -87,12 +94,13 @@ func create_next_round():
 	create_new_player()
 
 func _on_GoalAnimation_animation_finished(anim_name):
-	if anim_name == "slide_forwards":
-		pass # game over
+	if anim_name == "slide_forwards" && !won:
+		$GameOver.visible = true
 	 # Replace with function body.
 
 
 func _on_InputHandler_game_input_occured(event: GameInputEvent):
 	game_event = event
-	
-	pass
+
+func _on_RestartButton_pressed():
+	_ready()

@@ -6,4 +6,8 @@ func _ready():
 
 
 func _on_PlayGame_pressed():
-	get_tree().change_scene("res://Game.tscn")
+	get_tree().change_scene("res://Game/Game.tscn")
+
+
+func _on_Playground_pressed():
+	get_tree().change_scene("res://Playground/Playground.tscn")

@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Tetra/Tetra.tscn" type="PackedScene" id=1]
+[ext_resource path="res://WorldEnvironment.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Playground/Playground.gd" type="Script" id=3]
+[ext_resource path="res://Input/InputHandler.gd" type="Script" id=4]
+
+[node name="Playground" type="Spatial"]
+script = ExtResource( 3 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 35 )
+fov = 40.0
+
+[node name="WorldEnvironment" parent="." instance=ExtResource( 2 )]
+
+[node name="InputHandler" type="Spatial" parent="."]
+script = ExtResource( 4 )
+
+[node name="SpotLight" type="SpotLight" parent="."]
+transform = Transform( 0.995524, 0, 0.094508, 0, 1, 0, -0.094508, 0, 0.995524, 11.1428, 0, 24.6045 )
+spot_range = 88.737
+
+[node name="Tetra" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0 )
+
+[node name="Tetra2" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.5, 0 )
+
+[connection signal="game_input_occured" from="InputHandler" to="." method="_on_InputHandler_game_input_occured"]

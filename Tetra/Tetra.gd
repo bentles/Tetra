@@ -25,7 +25,7 @@ onready var fast_flip_sound = $FastFlipSound
 onready var split_sound = $SplitSound
 onready var merge_sound = $MergeSound
 
-const gap = 0.05
+const gap = 0.03
 var scale_revert = 1
 
 var Tetra = load("res://Tetra/Tetra.tscn")
@@ -143,8 +143,9 @@ func should_domino(x_bds, y_bds, direction: Vector2):
 	pass
 	
 func _check_ranges(is_align, with_align, is_adjacent, with_adjacent, forwards: bool):
-	var aligned = is_align[0] < with_align[1] && with_align[0] < is_align[1]
-		
+	# var aligned = is_align[0] < with_align[1] && with_align[0] < is_align[1]
+	var aligned = is_align[0] <= with_align[0] && is_align[1] >= with_align[1]
+	
 	var adjacent = false
 	if forwards:
 		adjacent = is_adjacent[1] == with_adjacent[0]

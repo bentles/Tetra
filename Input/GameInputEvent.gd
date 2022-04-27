@@ -2,7 +2,7 @@ class_name GameInputEvent
 
 extends Node
 
-enum {NONE, TAP, HOLD, SWIPE, FAST_SWIPE}
+enum { NONE, TAP, HOLD, SWIPE, FAST_SWIPE }
 
 var event_type
 var pressed_pos: Vector2
