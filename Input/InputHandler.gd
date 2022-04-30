@@ -39,6 +39,9 @@ func _physics_process(delta):
 func _unhandled_input(event):
 	if "index" in event && event.index > 9:
 		return
+		
+	if event is InputEventMouseButton:
+		return
 	
 	if event is InputEventScreenTouch:
 		var state = states[event.index]
